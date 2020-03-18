@@ -11,18 +11,6 @@ import os
 import configparser
 import csv
 import pandas as pd
-# import geopandas as gpd
-# import pyproj
-# from shapely.geometry import MultiPolygon, mapping, shape, LineString
-# from shapely.ops import transform, unary_union
-# from fiona.crs import from_epsg
-# import rasterio
-# from rasterio.mask import mask
-# from rasterstats import zonal_stats
-# import networkx as nx
-# from rtree import index
-# import numpy as np
-# from sklearn.linear_model import LinearRegression
 
 CONFIG = configparser.ConfigParser()
 CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
