@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spatial Estimation</title>
+    <!-- Load CARTO VL JS -->
+    <script src="https://libs.cartocdn.com/carto-vl/v1.2.4/carto-vl.min.js"></script>
+    <!-- Load Mapbox GL -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel="stylesheet">
+    <link href="https://carto.com/developers/carto-vl/v1.4.4/examples/maps/style.css" rel="stylesheet">
+    <style>
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <aside class="toolbox">
+      <div class="box">
+        <header>
+          <h1>Spatial Estimation</h1>
+        </header>
+        <section>
+          <p class="description open-sans">Showing details...</p>
+        </section>
+        <footer class="js-footer"></footer>
+      </div>
+    </aside>
+    <div id="loader">
+        <div class="CDB-LoaderIcon CDB-LoaderIcon--big">
+            <svg class="CDB-LoaderIcon-spinner" viewBox="0 0 50 50">
+                <circle class="CDB-LoaderIcon-path" cx="25" cy="25" r="20" fill="none"></circle>
+            </svg>
+        </div>
+    </div>
+    <script>
+        // Create map
+        const map = new mapboxgl.Map({
+          container: 'map',
+          style: carto.basemaps.positron,
+          center: [0, 53],
+          zoom: 5
+        });
+
+        const nav = new mapboxgl.NavigationControl({
+            showCompass: false
+        });
+        map.addControl(nav, 'top-left');
+
+        carto.setDefaultAuth({
+          username: 'tomalrussell',
+          apiKey: 'default_public'
+        });
+
+        // Create viz
+        // define @variables here to access later
+        const viz = new carto.Viz(`
+            color: ramp($boroughs_m, [ red, blue, yellow ])
+            @name: $name
+        `);
+        const source = new carto.source.Dataset('london_lifeexp')
+        const layer = new carto.Layer('layer', source, viz);
+        layer.addTo(map);
+        layer.on('loaded', hideLoader);
+
+        // Create popup
+        const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+
+        // Define interactivity
+        const interactivity = new carto.Interactivity(layer);
+        const delay = 50;
+
+        interactivity.on('featureEnter', event => {
+          event.features.forEach(feature => {
+            feature.color.blendTo('opacity(DeepPink, 0.5)', delay)
+            feature.strokeWidth.blendTo('4', delay);
+            feature.strokeColor.blendTo('opacity(DeepPink, 0.8)', delay);
+          });
+        });
+
+        interactivity.on('featureLeave', event => {
+          event.features.forEach(feature => {
+            feature.color.reset(delay);
+            feature.strokeWidth.reset(delay);
+            feature.strokeColor.reset(delay);
+          });
+        });
+
+        interactivity.on('featureHover', updatePopup);
+
+        function updatePopup(event) {
+            if (event.features.length > 0) {
+                const vars = event.features[0].variables;
+                popup.setHTML(`
+                    <div>
+                        <h3 class ="h3">${vars.name.value}</h3>
+                        <p class="description open-sans">Population: ${3}</h3>
+                    </div>
+                `);
+                popup.setLngLat([event.coordinates.lng, event.coordinates.lat]);
+                if (!popup.isOpen()) {
+                    popup.addTo(map);
+                }
+            } else {
+                popup.remove();
+            }
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.opacity = '0';
+        }
+      </script>
+  </body>
+</html>
