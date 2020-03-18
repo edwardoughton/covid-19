@@ -130,3 +130,13 @@ dmypy.json
 
 data/*
 results/*
+
+
+scripts/*.cpg
+scripts/*.dbf
+scripts/*.gpkg
+scripts/*.prj
+scripts/*.shp
+scripts/*.shx
+scripts/*.xls
+scripts/*.zip
