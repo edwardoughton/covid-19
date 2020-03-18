@@ -19,15 +19,15 @@ Create a conda environment called covid-19:
 
 Activate it (run this each time you switch projects):
 
-conda activate covid-19
+    conda activate covid-19
 
 First, install optional packages:
 
-conda install fiona shapely rtree pyproj
+    conda install fiona shapely rtree pyproj
 
-Then install pytal:
+Then run script:
 
-python setup.py install
+    python scripts/lads.py
 
 Contributors
 ============
