@@ -6,6 +6,9 @@ Description
 
 The **covid-19** repo models the potential spatial impacts of covid-19.
 
+See [notebook](https://github.com/edwardoughton/covid-19/blob/master/scripts/Spatial%20exposure%20notebook.ipynb) for calculations.
+
+
 Run using conda
 ==============
 
